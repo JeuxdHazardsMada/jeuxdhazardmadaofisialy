@@ -33,6 +33,8 @@ import { Route as AviatorIndexRouteImport } from './routes/aviator.index'
 import { Route as CustomSlugRouteImport } from './routes/custom.$slug'
 import { Route as AviatorProRouteImport } from './routes/aviator.pro'
 import { Route as AviatorBasicRouteImport } from './routes/aviator.basic'
+import { Route as ApiAiPaletteRouteImport } from './routes/api/ai-palette'
+import { Route as ApiAiBackgroundRouteImport } from './routes/api/ai-background'
 import { Route as AnalyseGameRouteImport } from './routes/analyse.$game'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -155,6 +157,16 @@ const AviatorBasicRoute = AviatorBasicRouteImport.update({
   path: '/aviator/basic',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAiPaletteRoute = ApiAiPaletteRouteImport.update({
+  id: '/api/ai-palette',
+  path: '/api/ai-palette',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiBackgroundRoute = ApiAiBackgroundRouteImport.update({
+  id: '/api/ai-background',
+  path: '/api/ai-background',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnalyseGameRoute = AnalyseGameRouteImport.update({
   id: '/analyse/$game',
   path: '/analyse/$game',
@@ -182,6 +194,8 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/analyse/$game': typeof AnalyseGameRoute
+  '/api/ai-background': typeof ApiAiBackgroundRoute
+  '/api/ai-palette': typeof ApiAiPaletteRoute
   '/aviator/basic': typeof AviatorBasicRoute
   '/aviator/pro': typeof AviatorProRoute
   '/custom/$slug': typeof CustomSlugRoute
@@ -209,6 +223,8 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/analyse/$game': typeof AnalyseGameRoute
+  '/api/ai-background': typeof ApiAiBackgroundRoute
+  '/api/ai-palette': typeof ApiAiPaletteRoute
   '/aviator/basic': typeof AviatorBasicRoute
   '/aviator/pro': typeof AviatorProRoute
   '/custom/$slug': typeof CustomSlugRoute
@@ -237,6 +253,8 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/analyse/$game': typeof AnalyseGameRoute
+  '/api/ai-background': typeof ApiAiBackgroundRoute
+  '/api/ai-palette': typeof ApiAiPaletteRoute
   '/aviator/basic': typeof AviatorBasicRoute
   '/aviator/pro': typeof AviatorProRoute
   '/custom/$slug': typeof CustomSlugRoute
@@ -266,6 +284,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sitemap.xml'
     | '/analyse/$game'
+    | '/api/ai-background'
+    | '/api/ai-palette'
     | '/aviator/basic'
     | '/aviator/pro'
     | '/custom/$slug'
@@ -293,6 +313,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sitemap.xml'
     | '/analyse/$game'
+    | '/api/ai-background'
+    | '/api/ai-palette'
     | '/aviator/basic'
     | '/aviator/pro'
     | '/custom/$slug'
@@ -320,6 +342,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sitemap.xml'
     | '/analyse/$game'
+    | '/api/ai-background'
+    | '/api/ai-palette'
     | '/aviator/basic'
     | '/aviator/pro'
     | '/custom/$slug'
@@ -348,6 +372,8 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AnalyseGameRoute: typeof AnalyseGameRoute
+  ApiAiBackgroundRoute: typeof ApiAiBackgroundRoute
+  ApiAiPaletteRoute: typeof ApiAiPaletteRoute
   AviatorBasicRoute: typeof AviatorBasicRoute
   AviatorProRoute: typeof AviatorProRoute
   CustomSlugRoute: typeof CustomSlugRoute
@@ -525,6 +551,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AviatorBasicRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ai-palette': {
+      id: '/api/ai-palette'
+      path: '/api/ai-palette'
+      fullPath: '/api/ai-palette'
+      preLoaderRoute: typeof ApiAiPaletteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-background': {
+      id: '/api/ai-background'
+      path: '/api/ai-background'
+      fullPath: '/api/ai-background'
+      preLoaderRoute: typeof ApiAiBackgroundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/analyse/$game': {
       id: '/analyse/$game'
       path: '/analyse/$game'
@@ -556,6 +596,8 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AnalyseGameRoute: AnalyseGameRoute,
+  ApiAiBackgroundRoute: ApiAiBackgroundRoute,
+  ApiAiPaletteRoute: ApiAiPaletteRoute,
   AviatorBasicRoute: AviatorBasicRoute,
   AviatorProRoute: AviatorProRoute,
   CustomSlugRoute: CustomSlugRoute,

@@ -20,6 +20,7 @@ import { CallProvider } from "@/contexts/CallContext";
 import GlobalCallRoot from "@/components/GlobalCallRoot";
 import ForceUpdateOverlay from "@/components/ForceUpdateOverlay";
 import TrialOverlay from "@/components/TrialOverlay";
+import AppPersonalizationRoot from "@/components/AppPersonalizationRoot";
 
 function NotFoundComponent() {
   return (
@@ -151,6 +152,7 @@ function RootComponent() {
             <CallProvider>
               <NotificationsProvider>
                 <ForceUpdateOverlay />
+                <AppPersonalizationRoot />
                 <GlobalCallRoot />
                 <TrialOverlay />
                 {/* Required: nested routes render here. */}
