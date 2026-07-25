@@ -314,9 +314,10 @@ const BottomNav = () => {
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-medium text-white text-[14px] leading-tight">Support WhatsApp</p>
-                    <p className="text-[11px] text-slate-400 truncate mt-0.5">{WHATSAPP_NUMBER}</p>
+                    <p className="text-[11px] text-slate-400 truncate mt-0.5">Discuter avec le support</p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-500" />
+
                 </a>
               </div>
 
