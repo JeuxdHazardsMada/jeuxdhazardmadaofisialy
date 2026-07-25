@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import jhLogo from "@/assets/jh-logo.png";
-import welcomeMusic from "@/assets/welcome-theme-v2.mp3.asset.json";
+import welcomeMusic from "@/assets/welcome-theme-v3.mp3.asset.json";
 
 /**
  * Écran d'accueil animé affiché juste après le SplashScreen.
