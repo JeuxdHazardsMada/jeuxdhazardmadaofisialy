@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import jhLogo from "@/assets/jh-logo.png";
-import splashTheme from "@/assets/splash-theme-v2.mp3.asset.json";
+import splashTheme from "@/assets/splash-theme-v3.mp3.asset.json";
 
 interface SplashScreenProps {
   onComplete: () => void;
