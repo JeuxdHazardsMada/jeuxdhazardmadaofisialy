@@ -22,6 +22,7 @@ import {
   Check,
   Trash2,
 } from "lucide-react";
+import AppMenu from "@/components/AppMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUnreadChats } from "@/hooks/useUnreadChats";
 import { useUnreadStore } from "@/hooks/useUnreadStore";
