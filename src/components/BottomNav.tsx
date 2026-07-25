@@ -544,22 +544,10 @@ const BottomNav = () => {
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-medium">WhatsApp</p>
-                    <p className="text-xs text-slate-400 truncate">{WHATSAPP_NUMBER}</p>
+                    <p className="text-xs text-slate-400 truncate">Ouvrir la conversation</p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </a>
-                <button
-                  onClick={copyWhatsapp}
-                  className="w-full flex items-center gap-3 px-3 py-3 hover:bg-white/5 transition text-left"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center shrink-0">
-                    {copied ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5 text-amber-300" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium">{copied ? "Numéro copié" : "Copier le numéro"}</p>
-                    <p className="text-xs text-slate-400 truncate">{WHATSAPP_NUMBER}</p>
-                  </div>
-                </button>
                 <a
                   href={`mailto:jeuxdhazardmada@gmail.com`}
                   className="flex items-center gap-3 px-3 py-3 hover:bg-white/5 transition"
@@ -569,11 +557,12 @@ const BottomNav = () => {
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-medium">E-mail</p>
-                    <p className="text-xs text-slate-400 truncate">jeuxdhazardmada@gmail.com</p>
+                    <p className="text-xs text-slate-400 truncate">Écrire au support</p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </a>
               </div>
+
               <p className="text-[10px] text-slate-500 mt-2 leading-snug">
                 Support technique et commercial du lundi au dimanche, réponse moyenne
                 sous quelques heures via WhatsApp.
