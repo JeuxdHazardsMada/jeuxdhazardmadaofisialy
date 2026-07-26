@@ -672,7 +672,9 @@ const Signup = () => {
                           onChange={(e) => updateField("fullName", e.target.value)}
                           className={inputClass}
                         />
+                      </div>
                     </div>
+
 
                     <div className="space-y-1.5">
                       <Label className={labelClass}>
