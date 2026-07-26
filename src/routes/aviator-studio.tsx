@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AviatorStudio from "@/pages/AviatorStudio";
-import { RequireAuth } from "@/components/RouteGuards";
+import { RequirePremium } from "@/components/RouteGuards";
 
 export const Route = createFileRoute("/aviator-studio")({
   head: () => ({
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/aviator-studio")({
 
 function RouteComponent() {
   return (
-    <RequireAuth>
+    <RequirePremium>
       <AviatorStudio />
-    </RequireAuth>
+    </RequirePremium>
   );
 }

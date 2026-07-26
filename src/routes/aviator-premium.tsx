@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AviatorPremium from "@/pages/AviatorPremium";
-import { RequireAuth } from "@/components/RouteGuards";
+import { RequirePremium } from "@/components/RouteGuards";
 
 export const Route = createFileRoute("/aviator-premium")({
   head: () => ({
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/aviator-premium")({
 
 function RouteComponent() {
   return (
-    <RequireAuth>
+    <RequirePremium>
       <AviatorPremium />
-    </RequireAuth>
+    </RequirePremium>
   );
 }

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import CosmoX from "@/pages/CosmoX";
-import { RequireAuth } from "@/components/RouteGuards";
+import { RequirePremium } from "@/components/RouteGuards";
 
 export const Route = createFileRoute("/cosmox")({
   head: () => ({
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/cosmox")({
 
 function RouteComponent() {
   return (
-    <RequireAuth>
+    <RequirePremium>
       <CosmoX />
-    </RequireAuth>
+    </RequirePremium>
   );
 }

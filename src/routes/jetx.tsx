@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import JetX from "@/pages/JetX";
-import { RequireAuth } from "@/components/RouteGuards";
+import { RequirePremium } from "@/components/RouteGuards";
 
 export const Route = createFileRoute("/jetx")({
   head: () => ({
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/jetx")({
 
 function RouteComponent() {
   return (
-    <RequireAuth>
+    <RequirePremium>
       <JetX />
-    </RequireAuth>
+    </RequirePremium>
   );
 }
