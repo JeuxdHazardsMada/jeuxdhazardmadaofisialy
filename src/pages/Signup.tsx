@@ -124,6 +124,8 @@ const Signup = () => {
     country: "",
     region: "",
     birthDate: "",
+    gender: "" as "" | "male" | "female" | "other",
+    profilePhone: "",
     profilePhoto: null as File | null,
     profilePhotoPreview: null as string | null,
     notRobot: false,
