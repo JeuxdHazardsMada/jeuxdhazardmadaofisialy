@@ -35,10 +35,17 @@ interface Plan {
   lifetime?: boolean;
 }
 
+const DAILY_RATE = 30000 / 31; // Ar / jour
+const priceFor = (d: number) => Math.round(d * DAILY_RATE);
+
 const PLANS: Plan[] = [
-  { id: "premium-global", days: 7,  price: Math.round(7  * (30000 / 31)), label: "Découverte", tagline: "7 jours" },
-  { id: "premium-global", days: 15, price: Math.round(15 * (30000 / 31)), label: "Standard",   tagline: "15 jours", popular: true },
-  { id: "premium-global", days: 31, price: 30000, label: "Mensuel",   tagline: "31 jours" },
+  { id: "premium-global", days: 7,   price: priceFor(7),   label: "Découverte",   tagline: "1 semaine" },
+  { id: "premium-global", days: 15,  price: priceFor(15),  label: "Standard",     tagline: "2 semaines" },
+  { id: "premium-global", days: 30,  price: priceFor(30),  label: "Mensuel",      tagline: "1 mois", popular: true },
+  { id: "premium-global", days: 60,  price: priceFor(60),  label: "Bimestriel",   tagline: "2 mois" },
+  { id: "premium-global", days: 90,  price: priceFor(90),  label: "Trimestriel",  tagline: "3 mois" },
+  { id: "premium-global", days: 180, price: priceFor(180), label: "Semestriel",   tagline: "6 mois" },
+  { id: "premium-global", days: 365, price: priceFor(365), label: "Annuel",       tagline: "1 an complet" },
   { id: "premium-lifetime", days: 0, price: 35000, label: "À Vie", tagline: "Accès permanent, sans expiration", lifetime: true },
 ];
 
