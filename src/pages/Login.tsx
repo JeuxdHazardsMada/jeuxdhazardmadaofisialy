@@ -397,6 +397,17 @@ const Login = () => {
                   </div>
                 )}
 
+                <label className="flex items-center gap-2.5 px-1 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded accent-[hsl(var(--gold))]"
+                  />
+                  <span className="text-[12px] font-semibold text-foreground/70">Se souvenir de moi</span>
+                </label>
+
+
                 <PrimaryButton loading={loading}>
                   <LogIn className="w-4 h-4" /> Se connecter
                 </PrimaryButton>
