@@ -340,6 +340,8 @@ const Signup = () => {
           region: formData.region || null,
           birth_date: formData.birthDate,
           avatar_url: avatarUrl,
+          gender: formData.gender || null,
+          phone: normalizePhone(formData.profilePhone || formData.phone) || null,
         })
         .eq("user_id", userId);
       if (profileErr) throw new Error("Impossible d'enregistrer le profil : " + profileErr.message);
