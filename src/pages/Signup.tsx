@@ -219,6 +219,8 @@ const Signup = () => {
           fullName: formData.fullName,
           country: formData.country,
           birthDate: formData.birthDate,
+          gender: formData.gender || undefined,
+          profilePhone: formData.profilePhone || (signupMethod === "phone" ? formData.phone : ""),
         });
         return r.success ? null : r.error.issues[0]?.message ?? "Données invalides";
       }
