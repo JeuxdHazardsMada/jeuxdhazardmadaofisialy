@@ -672,7 +672,50 @@ const Signup = () => {
                           onChange={(e) => updateField("fullName", e.target.value)}
                           className={inputClass}
                         />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className={labelClass}>
+                        <User className="w-3 h-3" /> Sexe
+                      </Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {([
+                          { v: "male", l: "Homme" },
+                          { v: "female", l: "Femme" },
+                          { v: "other", l: "Autre" },
+                        ] as const).map((g) => (
+                          <button
+                            key={g.v}
+                            type="button"
+                            onClick={() => updateField("gender", g.v)}
+                            className={`h-11 rounded-2xl border text-[12px] font-bold transition ${
+                              formData.gender === g.v
+                                ? "border-[hsl(var(--gold)/0.7)] bg-[hsl(var(--gold)/0.12)] text-[hsl(var(--gold))]"
+                                : "border-border/60 bg-foreground/[0.04] text-foreground/70 hover:border-[hsl(var(--gold)/0.4)]"
+                            }`}
+                          >
+                            {g.l}
+                          </button>
+                        ))}
                       </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className={labelClass}>
+                        <Phone className="w-3 h-3" /> Téléphone
+                      </Label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none" />
+                        <Input
+                          type="tel"
+                          autoComplete="tel"
+                          placeholder="+261 34 00 000 00"
+                          value={formData.profilePhone || (signupMethod === "phone" ? formData.phone : "")}
+                          onChange={(e) => updateField("profilePhone", e.target.value)}
+                          className={inputClass}
+                        />
+                      </div>
+                    </div>
                     </div>
 
                     <div className="space-y-1.5">
