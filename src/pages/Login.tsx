@@ -83,9 +83,12 @@ const Login = () => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword(payload as any);
       if (error) throw error;
-      if (data.user) {
+      if (data.user && rememberMe) {
         await rememberCurrentAccount(data.user.id, fallback);
       }
+      try {
+        localStorage.setItem("jh_remember_me", rememberMe ? "1" : "0");
+      } catch { /* no-op */ }
       toast.success("Connexion réussie !");
       navigate("/games");
     } catch (err: any) {
