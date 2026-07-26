@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AviatorSpribe from "@/pages/AviatorSpribe";
-import { RequireAuth } from "@/components/RouteGuards";
+import { RequirePremium } from "@/components/RouteGuards";
 
 export const Route = createFileRoute("/aviator-spribe")({
   head: () => ({
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/aviator-spribe")({
 
 function RouteComponent() {
   return (
-    <RequireAuth>
+    <RequirePremium>
       <AviatorSpribe />
-    </RequireAuth>
+    </RequirePremium>
   );
 }
