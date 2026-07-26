@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePremiumAccess } from "@/lib/premiumAccess";
+import PremiumPaywall from "@/components/PremiumPaywall";
 import { Loader2 } from "lucide-react";
 
 const FullScreenLoader = () => (
