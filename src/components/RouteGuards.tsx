@@ -42,3 +42,13 @@ export const RedirectIfAuthed = ({ children }: { children: ReactNode }) => {
   if (user) return <Navigate to="/games" replace />;
   return <>{children}</>;
 };
+
+export const RequirePremium = ({ children, gameName = "ce jeu" }: { children: ReactNode; gameName?: string }) => {
+  const { user, loading } = useAuth();
+  const access = usePremiumAccess();
+  const location = useLocation();
+  if (loading || access.loading) return <FullScreenLoader />;
+  if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  if (!access.hasAccess) return <PremiumPaywall gameName={gameName} />;
+  return <>{children}</>;
+};
