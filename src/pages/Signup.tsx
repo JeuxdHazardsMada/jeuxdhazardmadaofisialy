@@ -70,6 +70,8 @@ const profileSchema = z
     fullName: z.string().trim().min(2, "Nom complet trop court").max(80, "Nom trop long"),
     country: z.string().min(1, "Pays requis"),
     birthDate: z.string().min(1, "Date de naissance requise"),
+    gender: z.enum(["male", "female", "other"], { message: "Sexe requis" }),
+    profilePhone: z.string().trim().regex(/^\+?\d[\d\s().-]{6,20}$/, "Numéro invalide"),
   })
   .refine(
     (v) => {
