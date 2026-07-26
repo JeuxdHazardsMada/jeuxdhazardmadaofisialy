@@ -105,51 +105,64 @@ const Premium = () => {
   const PlansSection = (
     <div className="space-y-8">
       <section className="space-y-3">
-        <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Plans tarifaires</h2>
-        <div className="grid gap-3">
-          {PLANS.map((p, i) => (
+        <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Choisissez la durée</h2>
+        <p className="text-[11px] text-muted-foreground -mt-1">Sélectionnez une formule, puis suivez les étapes : paiement → preuve → validation admin.</p>
+        <div className="grid grid-cols-2 gap-2.5">
+          {PLANS.filter((p) => !p.lifetime).map((p, i) => (
             <button
               key={i}
               onClick={() => handleSelect(p)}
-              className={`relative w-full text-left rounded-2xl p-4 border-2 transition-all active:scale-[0.98] backdrop-blur ${
-                p.lifetime
-                  ? "border-amber-400/70 bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-amber-500/5 shadow-lg shadow-amber-500/20"
-                  : p.popular
-                  ? "border-primary bg-gradient-to-br from-primary/15 via-primary/5 to-transparent shadow-lg glow-gold"
-                  : "border-border/60 bg-card/70 hover:border-primary/40"
+              className={`relative text-left rounded-2xl p-3 border-2 transition-all active:scale-[0.97] backdrop-blur ${
+                p.popular
+                  ? "border-primary bg-gradient-to-br from-primary/20 via-primary/8 to-transparent shadow-lg glow-gold"
+                  : "border-border/60 bg-card/70 hover:border-primary/50"
               }`}
             >
               {p.popular && (
-                <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full gold-gradient text-[9px] font-black text-primary-foreground uppercase tracking-wider">
-                  Le plus choisi
+                <div className="absolute -top-2 right-2 px-1.5 py-0.5 rounded-full gold-gradient text-[8px] font-black text-primary-foreground uppercase tracking-wider">
+                  Populaire
                 </div>
               )}
-              {p.lifetime && (
-                <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[9px] font-black text-white uppercase tracking-wider flex items-center gap-1">
-                  <Gem className="w-2.5 h-2.5" /> Offre à vie
-                </div>
-              )}
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{p.label}</div>
-                  <div className="text-2xl font-black mt-0.5 flex items-baseline gap-1.5">
-                    {p.lifetime ? (
-                      <>À <span className="gold-text">vie</span></>
-                    ) : (
-                      <>{p.days} <span className="text-sm font-medium text-muted-foreground">jours</span></>
-                    )}
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">{p.tagline}</div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="text-xl font-black gold-text">{p.price.toLocaleString()}<span className="text-xs"> Ar</span></div>
-                  <div className="text-[9px] text-muted-foreground">
-                    {p.lifetime ? "paiement unique" : `${Math.round(p.price / p.days).toLocaleString()} Ar/jour`}
-                  </div>
-                </div>
+              <div className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">{p.label}</div>
+              <div className="text-2xl font-black mt-0.5 leading-none flex items-baseline gap-1">
+                {p.days}<span className="text-xs font-medium text-muted-foreground">j</span>
+              </div>
+              <div className="text-[9px] text-muted-foreground mt-0.5">{p.tagline}</div>
+              <div className="mt-2 pt-2 border-t border-border/40">
+                <div className="text-base font-black gold-text leading-none">{p.price.toLocaleString()}<span className="text-[10px]"> Ar</span></div>
+                <div className="text-[8px] text-muted-foreground mt-0.5">{Math.round(p.price / p.days).toLocaleString()} Ar/jour</div>
               </div>
             </button>
           ))}
+        </div>
+
+        {PLANS.filter((p) => p.lifetime).map((p, i) => (
+          <button
+            key={`life-${i}`}
+            onClick={() => handleSelect(p)}
+            className="relative w-full text-left rounded-2xl p-4 border-2 border-amber-400/70 bg-gradient-to-br from-amber-500/20 via-amber-500/8 to-amber-500/5 shadow-lg shadow-amber-500/20 active:scale-[0.98] transition backdrop-blur"
+          >
+            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[9px] font-black text-white uppercase tracking-wider flex items-center gap-1">
+              <Gem className="w-2.5 h-2.5" /> Offre à vie
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{p.label}</div>
+                <div className="text-2xl font-black mt-0.5 flex items-baseline gap-1.5">
+                  À <span className="gold-text">vie</span>
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{p.tagline}</div>
+              </div>
+              <div className="text-right shrink-0">
+                <div className="text-xl font-black gold-text">{p.price.toLocaleString()}<span className="text-xs"> Ar</span></div>
+                <div className="text-[9px] text-muted-foreground">paiement unique</div>
+              </div>
+            </div>
+          </button>
+        ))}
+
+        <div className="grid gap-3">
+
 
           {/* Plan personnalisé */}
           <div className="relative w-full rounded-2xl p-4 border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/15 via-emerald-500/8 to-transparent shadow-lg shadow-amber-500/15 backdrop-blur">
