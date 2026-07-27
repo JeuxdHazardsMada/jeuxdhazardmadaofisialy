@@ -39,8 +39,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
-const WHATSAPP_NUMBER = "+261 37 95 942 57";
-const WHATSAPP_RAW = "261379594257";
+const WHATSAPP_NUMBER = import.meta.env.VITE_SUPPORT_WHATSAPP_DISPLAY ?? "";
+const WHATSAPP_RAW = import.meta.env.VITE_SUPPORT_WHATSAPP ?? "";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_RAW}`;
 const APP_NAME = "Jeux d'Hazard";
 const APP_VERSION = "0.0.1";

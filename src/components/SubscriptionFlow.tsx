@@ -76,15 +76,6 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
       glowClass: "shadow-emerald-500/40",
       perks: ["Prédictions tireur/gardien", "Statistiques équipes", "Mode multi-match", "Alertes en direct"],
     };
-    if (m.includes("virtuel") || m.includes("virtual")) return {
-      label: "Édition Stade",
-      tagline: "8 ligues virtuelles maîtrisées",
-      icon: Star,
-      accent: "from-amber-400 via-amber-500 to-amber-500",
-      ring: "ring-amber-500/40",
-      glowClass: "shadow-amber-500/40",
-      perks: ["8 ligues couvertes", "Pondération avancée", "Calendrier en direct", "Conseils pré-match"],
-    };
     return {
       label: "Édition Pro",
       tagline: "Débloquez la pleine puissance",
@@ -200,7 +191,7 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
     let computedPrice: number;
     if (isLifetime) {
       d = 0; total = 0;
-      computedPrice = fixedPrice ?? 35000;
+      computedPrice = fixedPrice ?? 45000;
     } else if (fixedDays !== undefined) {
       d = fixedDays;
       const bonus = d >= 31 ? 10 : d >= 15 ? 5 : 0;
@@ -270,9 +261,13 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
     const { error: uploadError } = await supabase.storage.from("payment-proofs").upload(path, screenshotFile, { upsert: true });
     if (uploadError) { toast.error("Erreur d'upload: " + uploadError.message); setUploading(false); return; }
     
-    const { data: urlData } = supabase.storage.from("payment-proofs").getPublicUrl(path);
-    if (urlData?.publicUrl) {
-      await supabase.from("game_access").update({ payment_proof_url: urlData.publicUrl } as any).eq("id", pendingRequestId);
+    // Le bucket "payment-proofs" est privé : on génère une URL signée longue durée
+    const { data: urlData } = await supabase.storage
+      .from("payment-proofs")
+      .createSignedUrl(path, 60 * 60 * 24 * 365);
+    const proofUrl = urlData?.signedUrl ?? null;
+    if (proofUrl) {
+      await supabase.from("game_access").update({ payment_proof_url: proofUrl } as any).eq("id", pendingRequestId);
     }
 
     // Also send as chat message
@@ -280,7 +275,7 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
       user_id: user.id,
       game_mode: gameMode,
       message: `Preuve de paiement - ${gameName}`,
-      image_url: urlData?.publicUrl || null,
+      image_url: proofUrl,
       status: "pending",
     });
     
@@ -300,8 +295,10 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
       const path = `${user.id}/chat-${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("payment-proofs").upload(path, chatImageFile, { upsert: true });
       if (!upErr) {
-        const { data: urlD } = supabase.storage.from("payment-proofs").getPublicUrl(path);
-        imageUrl = urlD?.publicUrl || null;
+        const { data: urlD } = await supabase.storage
+          .from("payment-proofs")
+          .createSignedUrl(path, 60 * 60 * 24 * 365);
+        imageUrl = urlD?.signedUrl ?? null;
       }
     }
 

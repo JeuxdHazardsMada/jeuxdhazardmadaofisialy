@@ -142,7 +142,7 @@ BEGIN
   VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'name', NEW.email), NEW.email);
   
   -- Auto-assign admin role for the specific admin email
-  IF NEW.email = 'randriamalalamahandryhery@gmail.com' THEN
+  IF NEW.email = 'admin@example.com' THEN
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin');
   ELSE
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'user');
