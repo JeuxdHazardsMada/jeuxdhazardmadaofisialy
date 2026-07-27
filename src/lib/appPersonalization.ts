@@ -1,6 +1,7 @@
 // Client-side personalization store: background image, palette, language,
 // favorites and navigation history. All persisted to localStorage.
 // Emits a "app-personalization-changed" window event so listeners can re-apply.
+import { setBackdropActive } from "@/lib/backdrop";
 
 export type Palette = {
   primary?: string;      // "H S% L%"  (HSL triplet, no hsl())
@@ -13,6 +14,15 @@ export type Palette = {
 
 export type Personalization = {
   bgUrl?: string | null;
+  /** Vidéo de fond : "local" (IndexedDB) ou URL distante. */
+  bgVideoSource?: "local" | "remote" | null;
+  bgVideoUrl?: string | null;     // utilisé si bgVideoSource === "remote"
+  bgVideoName?: string | null;
+  bgVideoOpacity?: number;        // 0..1
+  bgVideoBlur?: number;           // px
+  bgVideoMuted?: boolean;         // son coupé (défaut: true)
+  bgVideoVolume?: number;         // 0..1
+  bgVideoPaused?: boolean;        // lecture en pause
   palette?: Palette | null;
   language?: "fr" | "en";
   darkMode?: boolean;
@@ -72,6 +82,7 @@ export function applyBackground(url?: string | null) {
   let el = document.getElementById(id) as HTMLDivElement | null;
   if (!url) {
     if (el) el.remove();
+    setBackdropActive("image", false);
     return;
   }
   if (!el) {
@@ -91,6 +102,7 @@ export function applyBackground(url?: string | null) {
     document.body.appendChild(el);
   }
   el.style.backgroundImage = `linear-gradient(hsl(var(--background)/0.65), hsl(var(--background)/0.85)), url("${url}")`;
+  setBackdropActive("image", true);
   requestAnimationFrame(() => { if (el) el.style.opacity = "1"; });
 }
 

@@ -1,97 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import jhLogo from "@/assets/jh-logo.png";
-import welcomeMusic from "@/assets/welcome-theme-v3.mp3.asset.json";
 
 /**
  * Écran d'accueil animé affiché juste après le SplashScreen.
- * Affiche le logo + message textuel « Bienvenue dans l'univers de Jeux d'Hazard. Bonne chance ! »
- * accompagné d'une musique douce qui s'estompe (fade-out) avant transition.
- *
- * Voix off (optionnelle) : ajoutez un asset `src/assets/welcome-voice.mp3.asset.json`
- * pour qu'elle soit jouée automatiquement par-dessus la musique.
+ * Version silencieuse : aucune bande sonore n'est chargée.
+ * Durée fixe pour garantir la transition vers la page suivante.
  */
-
-const TOTAL_MS = 5400;      // Durée totale de l'intro (piste = 4,66 s)
-const FADE_START_MS = 4400; // Début du fondu sortant
-const FADE_STEPS = 24;
+const TOTAL_MS = 2800;
 
 interface Props {
   onComplete: () => void;
-  voiceUrl?: string;
 }
 
-const WelcomeIntro = ({ onComplete, voiceUrl }: Props) => {
+const WelcomeIntro = ({ onComplete }: Props) => {
   const [leaving, setLeaving] = useState(false);
-  const musicRef = useRef<HTMLAudioElement | null>(null);
-  const voiceRef = useRef<HTMLAudioElement | null>(null);
   const doneRef = useRef(false);
 
   useEffect(() => {
-    // Musique de fond
-    const music = new Audio(welcomeMusic.url);
-    music.preload = "auto";
-    music.volume = 0.9;
-    (music as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
-    music.setAttribute("playsinline", "");
-    music.setAttribute("webkit-playsinline", "");
-    musicRef.current = music;
-
-    const tryPlay = () => {
-      const p = music.play();
-      if (p && typeof p.then === "function") {
-        p.catch(() => {
-          music.muted = true;
-          music.play().then(() => { setTimeout(() => { music.muted = false; }, 0); }).catch(() => { /* noop */ });
-        });
-      }
-    };
-    tryPlay();
-
-    // Voix off optionnelle
-    if (voiceUrl) {
-      const voice = new Audio(voiceUrl);
-      voice.preload = "auto";
-      voice.volume = 1;
-      (voice as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
-      voice.setAttribute("playsinline", "");
-      voiceRef.current = voice;
-      // Petit délai pour laisser la musique poser l'ambiance
-      setTimeout(() => { voice.play().catch(() => { /* noop */ }); }, 500);
-    }
-
-    // Fondu sortant de la musique
-    const fadeDuration = TOTAL_MS - FADE_START_MS;
-    const stepMs = fadeDuration / FADE_STEPS;
-    const fadeTimer = window.setTimeout(() => {
-      const startVol = music.volume;
-      let i = 0;
-      const iv = window.setInterval(() => {
-        i += 1;
-        const v = Math.max(0, startVol * (1 - i / FADE_STEPS));
-        try { music.volume = v; } catch { /* noop */ }
-        if (i >= FADE_STEPS) window.clearInterval(iv);
-      }, stepMs);
-    }, FADE_START_MS);
-
-    // Fin de l'intro
-    const endTimer = window.setTimeout(() => {
+    const exitAt = window.setTimeout(() => setLeaving(true), Math.max(0, TOTAL_MS - 400));
+    const finishAt = window.setTimeout(() => {
       if (doneRef.current) return;
       doneRef.current = true;
-      setLeaving(true);
-      setTimeout(() => {
-        try { music.pause(); music.src = ""; } catch { /* noop */ }
-        try { voiceRef.current?.pause(); if (voiceRef.current) voiceRef.current.src = ""; } catch { /* noop */ }
-        onComplete();
-      }, 400);
+      onComplete();
     }, TOTAL_MS);
-
     return () => {
-      window.clearTimeout(fadeTimer);
-      window.clearTimeout(endTimer);
-      try { music.pause(); music.src = ""; } catch { /* noop */ }
-      try { voiceRef.current?.pause(); if (voiceRef.current) voiceRef.current.src = ""; } catch { /* noop */ }
+      window.clearTimeout(exitAt);
+      window.clearTimeout(finishAt);
     };
-  }, [onComplete, voiceUrl]);
+  }, [onComplete]);
 
   return (
     <div

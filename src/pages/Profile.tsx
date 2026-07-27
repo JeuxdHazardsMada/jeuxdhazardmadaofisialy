@@ -5,9 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Camera, Check, KeyRound, Mail, Phone, Globe, User as UserIcon, Shield, Loader2, Calendar, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, Camera, Check, KeyRound, Mail, Phone, Globe, User as UserIcon, Shield, Loader2, Calendar, MapPin, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { COUNTRIES } from "@/lib/countries";
+import { processAvatar } from "@/lib/avatarImage";
+
 
 type EditField = "email" | "phone" | "password" | null;
 
@@ -25,7 +31,24 @@ const fileToDataUrl = (file: File) =>
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, profile, loading, refreshProfile } = useAuth();
+  const { user, profile, loading, refreshProfile, signOut } = useAuth();
+  const [deleting, setDeleting] = useState(false);
+
+  const deleteAccount = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("delete-account");
+      if (error || (data as any)?.error) throw new Error((data as any)?.error || error?.message || "Erreur");
+      toast.success("Compte supprimé");
+      await signOut();
+      navigate("/login");
+    } catch (e: any) {
+      toast.error("Échec de la suppression", { description: e?.message?.slice(0, 140) });
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   // Quick-edit profile fields (no code)
   const [fullName, setFullName] = useState("");
@@ -98,40 +121,31 @@ const Profile = () => {
       setValidatingFace(false);
     }
 
-    // Upload
+    // Traitement + persistance (image optimisée haute qualité, toujours affichable)
     setUploading(true);
     try {
-      const ext = (file.name.split(".").pop() || "png").toLowerCase();
-      const path = `${user.id}/${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type || undefined });
-      let publicUrl: string;
-      if (upErr) {
-        const { error: fbErr } = await supabase.storage.from("gen-store").upload(`avatars/${path}`, file, { upsert: true });
-        if (fbErr) throw fbErr;
-        publicUrl = supabase.storage.from("gen-store").getPublicUrl(`avatars/${path}`).data.publicUrl;
-      } else {
-        publicUrl = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
-      }
-      setAvatarUrl(publicUrl);
-      setAvatarPreview(publicUrl);
-      // Persist immediately so the avatar shows everywhere without needing an extra save click
+      const optimized = await processAvatar(file, { size: 512, quality: 0.9 });
+      setAvatarUrl(optimized);
+      setAvatarPreview(optimized);
       const { error: persistErr } = await supabase
         .from("profiles")
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: optimized })
         .eq("user_id", user.id);
       if (persistErr) {
-        toast.error("Photo enregistrée mais non sauvegardée : " + persistErr.message);
+        toast.error("Photo non sauvegardée : " + persistErr.message);
+        setAvatarPreview(avatarUrl);
       } else {
         await refreshProfile();
         toast.success("Photo de profil mise à jour");
       }
     } catch (err: any) {
-      toast.error(err.message || "Erreur upload");
+      toast.error(err.message || "Erreur lors du traitement de l'image");
       setAvatarPreview(avatarUrl);
     } finally {
       setUploading(false);
     }
   };
+
 
   const saveProfileFields = async () => {
     if (!user) return;
@@ -351,6 +365,43 @@ const Profile = () => {
               <span className="text-[10px] text-primary font-bold uppercase">Modifier</span>
             </button>
           ))}
+        </section>
+
+        {/* Danger zone — delete account */}
+        <section className="rounded-3xl border border-destructive/30 bg-destructive/5 backdrop-blur-sm p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <Trash2 className="w-4 h-4 text-destructive" />
+            <h2 className="text-sm font-bold text-destructive">Zone dangereuse</h2>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Supprimer votre compte est <strong>irréversible</strong>. Toutes vos données (profil, historique,
+            messages, abonnements) seront effacées et vous serez déconnecté.
+          </p>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="w-full" disabled={deleting}>
+                {deleting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Trash2 className="w-4 h-4 mr-1" />}
+                Supprimer définitivement mon compte
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Supprimer votre compte ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action est définitive. Vos données seront effacées et vous serez immédiatement déconnecté.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={deleteAccount}
+                >
+                  Oui, supprimer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </section>
       </main>
 

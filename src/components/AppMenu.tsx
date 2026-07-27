@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { readSoundSettings, writeSoundSettings, playNotificationSound } from "@/lib/notificationSound";
 import {
   User,
   Info,
@@ -37,6 +38,7 @@ import {
   Sun,
   Volume2,
   RotateCcw,
+  Video as VideoIcon,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -48,11 +50,18 @@ import {
   type Palette as PaletteT,
   type Personalization,
 } from "@/lib/appPersonalization";
+import {
+  saveVideoBlob,
+  deleteVideoBlob,
+  applyStoredVideoBackground,
+  applyBackgroundVideo,
+} from "@/lib/videoBackground";
+
 
 const WHATSAPP_LINK = "https://wa.me/261379594257";
 const EMAIL_LINK = "mailto:jeuxdhazardmada@gmail.com";
 const APP_NAME = "Jeux d'Hazard";
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "0.0.1";
 
 type PanelKey =
   | "root"
@@ -234,7 +243,7 @@ function RootPanel({
       <Group title="Personnalisation IA">
         <Row icon={<ImageIcon className="w-[18px] h-[18px] text-fuchsia-300" />} label="Thème & Fond IA" sublabel="Générer avec l'intelligence artificielle" onClick={() => goto("theme")} />
         <Row icon={<Palette className="w-[18px] h-[18px] text-sky-300" />} label="Palette de couleurs IA" sublabel="Générer une palette avec l'IA" onClick={() => goto("theme")} />
-        <Row icon={<Languages className="w-[18px] h-[18px] text-teal-300" />} label="Langue" sublabel={p.language === "en" ? "English" : "Français"} onClick={() => goto("language")} />
+        
       </Group>
 
       <Group title="Contenu">
@@ -317,12 +326,30 @@ function SettingsPanel() {
   const [p, setP] = useState<Personalization>(() => readPersonalization());
   useEffect(() => subscribePersonalization(setP), []);
   const [notif, setNotif] = useState<boolean>(() => localStorage.getItem("jh.notif") !== "0");
+  const [soundOn, setSoundOn] = useState<boolean>(() => readSoundSettings().enabled);
+  const [soundVol, setSoundVol] = useState<number>(() => readSoundSettings().volume);
   const [sound, setSound] = useState<boolean>(() => localStorage.getItem("jh.sound") !== "0");
 
   return (
     <div className="space-y-2">
       <Group title="Préférences">
         <SwitchRow icon={<Bell className="w-5 h-5 text-amber-300" />} label="Notifications" checked={notif} onCheckedChange={(v) => { setNotif(v); localStorage.setItem("jh.notif", v ? "1" : "0"); toast.success(v ? "Activées" : "Désactivées"); }} />
+        <SwitchRow icon={<Bell className="w-5 h-5 text-emerald-300" />} label="Sons de notification" checked={soundOn} onCheckedChange={(v) => { setSoundOn(v); writeSoundSettings({ enabled: v }); if (v) playNotificationSound("message", { force: true }); toast.success(v ? "Sons activés" : "Sons désactivés"); }} />
+        {soundOn && (
+          <div className="px-1 pb-1">
+            <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+              <span>Volume des sons</span><span>{Math.round(soundVol * 100)}%</span>
+            </div>
+            <input
+              type="range" min={0} max={100} step={5}
+              value={Math.round(soundVol * 100)}
+              onChange={(e) => { const v = Number(e.target.value) / 100; setSoundVol(v); writeSoundSettings({ volume: v }); }}
+              onMouseUp={() => playNotificationSound("message", { force: true })}
+              onTouchEnd={() => playNotificationSound("message", { force: true })}
+              className="w-full accent-emerald-400"
+            />
+          </div>
+        )}
         <SwitchRow icon={<Volume2 className="w-5 h-5 text-amber-300" />} label="Sons" checked={sound} onCheckedChange={(v) => { setSound(v); localStorage.setItem("jh.sound", v ? "1" : "0"); toast.success(v ? "Activés" : "Désactivés"); }} />
         <SwitchRow icon={p.darkMode !== false ? <Moon className="w-5 h-5 text-amber-300" /> : <Sun className="w-5 h-5 text-amber-300" />} label="Mode sombre" checked={p.darkMode !== false} onCheckedChange={(v) => { writePersonalization({ darkMode: v }); toast.success(v ? "Sombre" : "Clair"); }} />
       </Group>
@@ -530,8 +557,173 @@ function ThemePanel() {
     toast.success("Thème réinitialisé");
   };
 
+  /* ---- Fond d'écran vidéo ---- */
+  const [videoBusy, setVideoBusy] = useState(false);
+  const [remoteVideo, setRemoteVideo] = useState("");
+
+
+
+
+  const pickVideo = async (file?: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith("video/")) { toast.error("Choisissez un fichier vidéo"); return; }
+    if (file.size > 60 * 1024 * 1024) { toast.error("Vidéo trop lourde (60 Mo max)"); return; }
+    setVideoBusy(true);
+    try {
+      await saveVideoBlob(file);
+      writePersonalization({ bgVideoSource: "local", bgVideoUrl: null, bgVideoName: file.name });
+      await applyStoredVideoBackground(videoOpts());
+      toast.success("Vidéo appliquée en fond d'écran");
+    } catch (e: any) {
+      toast.error("Échec", { description: e?.message?.slice(0, 120) });
+    } finally { setVideoBusy(false); }
+  };
+
+  const applyRemoteVideo = () => {
+    const url = remoteVideo.trim();
+    if (!url) { toast.error("Collez un lien vidéo (mp4, webm…)"); return; }
+    writePersonalization({ bgVideoSource: "remote", bgVideoUrl: url, bgVideoName: url.split("/").pop() || "vidéo" });
+    applyBackgroundVideo(url, videoOpts());
+    setRemoteVideo("");
+    toast.success("Vidéo appliquée en fond d'écran");
+  };
+
+  const removeVideo = async () => {
+    await deleteVideoBlob();
+    writePersonalization({ bgVideoSource: null, bgVideoUrl: null, bgVideoName: null });
+    applyBackgroundVideo(null);
+    toast.success("Fond vidéo supprimé");
+  };
+
+  const videoOpts = (over: Partial<typeof p> = {}) => {
+    const n = { ...p, ...over };
+    return {
+      opacity: n.bgVideoOpacity ?? 1,
+      blur: n.bgVideoBlur ?? 0,
+      muted: n.bgVideoMuted !== false,
+      volume: n.bgVideoVolume ?? 0.7,
+      paused: n.bgVideoPaused === true,
+    };
+  };
+
+  const updateVideoOpts = (patch: Partial<typeof p>) => {
+    const next = { ...p, ...patch };
+    writePersonalization(patch);
+    const opts = videoOpts(patch);
+    if (next.bgVideoSource === "remote" && next.bgVideoUrl) applyBackgroundVideo(next.bgVideoUrl, opts);
+    else if (next.bgVideoSource === "local") void applyStoredVideoBackground(opts);
+  };
+
   return (
     <div className="space-y-5">
+      {/* Fond d'écran vidéo */}
+      <section className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-transparent p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <VideoIcon className="w-4 h-4 text-emerald-300" />
+          <h3 className="font-bold text-sm">Fond d'écran vidéo</h3>
+        </div>
+        <p className="text-[11px] text-slate-400 mb-3">
+          Choisissez une vidéo depuis votre appareil (ou un lien) : elle sera lue en boucle,
+          elle sera lue en boucle derrière toute l'application, avec son son si vous l'activez
+          (lecture, pause, volume et remplacement disponibles ci-dessous).
+        </p>
+
+        <label className="block w-full rounded-xl border-2 border-dashed border-emerald-500/30 hover:border-emerald-500/60 transition-colors cursor-pointer px-3 py-4 text-center">
+          <input
+            type="file"
+            accept="video/*"
+            className="hidden"
+            disabled={videoBusy}
+            onChange={(e) => { void pickVideo(e.target.files?.[0]); e.currentTarget.value = ""; }}
+          />
+          <span className="text-xs text-slate-300 inline-flex items-center gap-2">
+            {videoBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <VideoIcon className="w-4 h-4 text-emerald-300" />}
+            {videoBusy ? "Application…" : p.bgVideoSource ? "Remplacer la vidéo" : "Sélectionner une vidéo"}
+          </span>
+        </label>
+
+        <div className="flex gap-2 mt-2">
+          <input
+            value={remoteVideo}
+            onChange={(e) => setRemoteVideo(e.target.value)}
+            placeholder="ou collez un lien .mp4 / .webm"
+            className="flex-1 h-9 rounded-lg bg-black/30 border border-white/10 px-3 text-xs outline-none focus:border-emerald-500/50"
+          />
+          <Button size="sm" variant="secondary" className="h-9" onClick={applyRemoteVideo}>Appliquer</Button>
+        </div>
+
+
+
+
+        {p.bgVideoSource && (
+          <div className="mt-3 space-y-3">
+            <div className="flex items-center justify-between text-[11px] text-slate-300">
+              <span className="truncate pr-2">Vidéo active : {p.bgVideoName || "vidéo"}</span>
+              <button onClick={() => void removeVideo()} className="text-amber-300 hover:underline shrink-0">Supprimer</button>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                className="h-8 flex-1 text-xs"
+                onClick={() => updateVideoOpts({ bgVideoPaused: !(p.bgVideoPaused === true) })}
+              >
+                {p.bgVideoPaused ? "Lecture" : "Pause"}
+              </Button>
+              <Button
+                size="sm"
+                variant={p.bgVideoMuted === false ? "default" : "secondary"}
+                className="h-8 flex-1 text-xs"
+                onClick={() => updateVideoOpts({ bgVideoMuted: !(p.bgVideoMuted === false) })}
+              >
+                {p.bgVideoMuted === false ? "Son activé" : "Son coupé"}
+              </Button>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                <span>Volume de la vidéo</span><span>{Math.round((p.bgVideoVolume ?? 0.7) * 100)}%</span>
+              </div>
+              <input
+                type="range" min={0} max={100} step={5}
+                disabled={p.bgVideoMuted !== false}
+                value={Math.round((p.bgVideoVolume ?? 0.7) * 100)}
+                onChange={(e) => updateVideoOpts({ bgVideoVolume: Number(e.target.value) / 100 })}
+                className="w-full accent-emerald-400 disabled:opacity-40"
+              />
+              {p.bgVideoMuted === false && (
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Si le son ne démarre pas, touchez l'écran une fois (sécurité du navigateur).
+                </p>
+              )}
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                <span>Intensité</span><span>{Math.round((p.bgVideoOpacity ?? 1) * 100)}%</span>
+              </div>
+              <input
+                type="range" min={20} max={100} step={5}
+                value={Math.round((p.bgVideoOpacity ?? 1) * 100)}
+                onChange={(e) => updateVideoOpts({ bgVideoOpacity: Number(e.target.value) / 100 })}
+                className="w-full accent-emerald-400"
+              />
+            </div>
+            <div>
+              <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                <span>Flou</span><span>{p.bgVideoBlur ?? 0}px</span>
+              </div>
+              <input
+                type="range" min={0} max={20} step={1}
+                value={p.bgVideoBlur ?? 0}
+                onChange={(e) => updateVideoOpts({ bgVideoBlur: Number(e.target.value) })}
+                className="w-full accent-emerald-400"
+              />
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* AI Background */}
       <section className="rounded-2xl border border-fuchsia-500/20 bg-gradient-to-br from-fuchsia-500/10 to-transparent p-4">
         <div className="flex items-center gap-2 mb-2">
