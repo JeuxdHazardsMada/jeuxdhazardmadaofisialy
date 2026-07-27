@@ -57,7 +57,7 @@ const PremiumHelp = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <a href="https://wa.me/${import.meta.env.VITE_SUPPORT_WHATSAPP ?? ""}" target="_blank" rel="noopener noreferrer">
+            <a href={`https://wa.me/${import.meta.env.VITE_SUPPORT_WHATSAPP ?? ""}`} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" className="w-full h-10 text-xs font-semibold">
                 <MessageCircle className="w-3.5 h-3.5 mr-1.5" /> WhatsApp
               </Button>
