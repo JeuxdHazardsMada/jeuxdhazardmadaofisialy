@@ -243,9 +243,9 @@ BEGIN
     COALESCE(NEW.raw_user_meta_data->>'name', NEW.email),
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'name', NEW.email),
-    CASE WHEN NEW.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com') THEN true ELSE false END
+    CASE WHEN NEW.email IN ('admin@example.com', 'admin2@example.com') THEN true ELSE false END
   );
-  IF NEW.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com') THEN
+  IF NEW.email IN ('admin@example.com', 'admin2@example.com') THEN
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin');
     INSERT INTO public.protected_admins (user_id, email) VALUES (NEW.id, NEW.email) ON CONFLICT DO NOTHING;
   ELSE

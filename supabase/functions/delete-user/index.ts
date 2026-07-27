@@ -6,8 +6,8 @@ const corsHeaders = {
 };
 
 const PROTECTED_EMAILS = [
-  "aviatorgamespredictor@gmail.com",
-  "randriamalalamahandryhery@gmail.com",
+  "admin2@example.com",
+  "admin@example.com",
 ];
 
 Deno.serve(async (req) => {

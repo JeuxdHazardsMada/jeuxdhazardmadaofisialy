@@ -58,7 +58,7 @@ import {
 } from "@/lib/videoBackground";
 
 
-const WHATSAPP_LINK = "https://wa.me/261379594257";
+const WHATSAPP_LINK = `https://wa.me/${import.meta.env.VITE_SUPPORT_WHATSAPP ?? ""}`;
 const EMAIL_LINK = "mailto:jeuxdhazardmada@gmail.com";
 const APP_NAME = "Jeux d'Hazard";
 const APP_VERSION = "0.0.1";

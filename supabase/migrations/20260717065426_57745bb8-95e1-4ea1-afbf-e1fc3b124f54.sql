@@ -305,10 +305,10 @@ BEGIN
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', 'Joueur'),
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', 'Joueur'),
     COALESCE(NEW.email, ''),
-    CASE WHEN NEW.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com') THEN true ELSE false END,
+    CASE WHEN NEW.email IN ('admin@example.com', 'admin2@example.com') THEN true ELSE false END,
     now()
   ) ON CONFLICT (user_id) DO NOTHING;
-  IF NEW.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com') THEN
+  IF NEW.email IN ('admin@example.com', 'admin2@example.com') THEN
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin') ON CONFLICT DO NOTHING;
     INSERT INTO public.protected_admins (user_id, email) VALUES (NEW.id, NEW.email) ON CONFLICT DO NOTHING;
   ELSE

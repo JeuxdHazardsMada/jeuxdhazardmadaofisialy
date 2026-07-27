@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-    const email = "randriamalalamahandryhery@gmail.com";
+    const email = "admin@example.com";
     const password = "rand2104";
     const phoneDigits = "261336756185"; // no leading '+'
     const phoneDisplay = "+261336756185";

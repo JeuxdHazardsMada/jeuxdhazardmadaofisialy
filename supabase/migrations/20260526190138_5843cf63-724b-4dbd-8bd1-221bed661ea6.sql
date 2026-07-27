@@ -162,7 +162,7 @@ BEGIN
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', 'Joueur'),
     COALESCE(NEW.email, '')
   ) ON CONFLICT (user_id) DO NOTHING;
-  IF NEW.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com') THEN
+  IF NEW.email IN ('admin@example.com', 'admin2@example.com') THEN
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin') ON CONFLICT DO NOTHING;
   ELSE
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'user') ON CONFLICT DO NOTHING;
@@ -174,7 +174,7 @@ $$;
 INSERT INTO public.user_roles (user_id, role)
 SELECT u.id, 'admin'::app_role
 FROM auth.users u
-WHERE u.email IN ('randriamalalamahandryhery@gmail.com', 'aviatorgamespredictor@gmail.com')
+WHERE u.email IN ('admin@example.com', 'admin2@example.com')
   AND NOT EXISTS (SELECT 1 FROM public.user_roles r WHERE r.user_id = u.id AND r.role = 'admin');
 
 -- Payment-proofs bucket tightening
