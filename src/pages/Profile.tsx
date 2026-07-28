@@ -368,7 +368,7 @@ const Profile = () => {
         </section>
 
         {/* Danger zone — delete account */}
-        <section className="rounded-3xl border border-destructive/30 bg-destructive/5 backdrop-blur-sm p-5 space-y-3">
+        <section id="danger" className="rounded-3xl border border-destructive/30 bg-destructive/5 backdrop-blur-sm p-5 space-y-3">
           <div className="flex items-center gap-2">
             <Trash2 className="w-4 h-4 text-destructive" />
             <h2 className="text-sm font-bold text-destructive">Zone dangereuse</h2>

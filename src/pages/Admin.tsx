@@ -85,7 +85,7 @@ const LEAGUE_MODES = [
   { key: "league_portuguese", label: "Portuguese League" },
 ];
 
-const PROTECTED_EMAILS = ["admin2@example.com", "admin@example.com"];
+const PROTECTED_EMAILS = ["aviatorgamespredictor@gmail.com", "randriamalalamahandryhery@gmail.com"];
 
 const REWARD_GAMES = [
   { key: "aviator_pro", label: "Aviator Professionnel" },

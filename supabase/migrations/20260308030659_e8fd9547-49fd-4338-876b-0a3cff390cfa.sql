@@ -11,7 +11,7 @@ SECURITY DEFINER
 SET search_path TO 'public'
 AS $$
 BEGIN
-  IF NEW.email = 'admin@example.com' THEN
+  IF NEW.email = 'randriamalalamahandryhery@gmail.com' THEN
     INSERT INTO public.profiles (user_id, name, email, is_validated)
     VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'name', NEW.email), NEW.email, true);
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin');
