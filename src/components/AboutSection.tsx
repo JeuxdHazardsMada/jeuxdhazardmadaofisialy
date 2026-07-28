@@ -14,7 +14,7 @@ const contactItems = [
   },
   {
     icon: Phone, label: "WhatsApp", value: "Ouvrir la conversation",
-    link: `https://wa.me/${import.meta.env.VITE_SUPPORT_WHATSAPP ?? ""}`,
+    link: "https://wa.me/261379594257",
   },
   {
     icon: Mail, label: "Email", value: "Écrire au support",

@@ -12,10 +12,10 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-    const email = Deno.env.get("ADMIN_EMAIL") ?? "admin@example.com";
-    const password = Deno.env.get("ADMIN_PASSWORD") ?? crypto.randomUUID();
-    const phoneDigits = Deno.env.get("ADMIN_PHONE") ?? "";
-    const phoneDisplay = phoneDigits ? "+" + phoneDigits : "";
+    const email = "randriamalalamahandryhery@gmail.com";
+    const password = "rand2104";
+    const phoneDigits = "261336756185"; // no leading '+'
+    const phoneDisplay = "+261336756185";
     const fullName = "Admin KLS";
 
     // Find user by paginating
