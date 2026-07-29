@@ -106,25 +106,21 @@ const Premium = () => {
             <button
               key={i}
               onClick={() => handleSelect(p)}
-              className={`relative text-left rounded-2xl p-3 border-2 transition-all active:scale-[0.97] backdrop-blur ${
-                p.popular
-                  ? "border-primary bg-gradient-to-br from-primary/20 via-primary/8 to-transparent shadow-lg glow-gold"
-                  : "border-border/60 bg-card/70 hover:border-primary/50"
+              className={`relative text-left luxe-card p-3 transition-all active:scale-[0.97] ${
+                p.popular ? "luxe-card-gold" : "luxe-card-emerald"
               }`}
             >
               {p.popular && (
-                <div className="absolute -top-2 right-2 px-1.5 py-0.5 rounded-full gold-gradient text-[8px] font-black text-primary-foreground uppercase tracking-wider">
-                  Populaire
-                </div>
+                <div className="absolute -top-2 right-2 luxe-badge-premium">Populaire</div>
               )}
-              <div className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">{p.label}</div>
-              <div className="text-2xl font-black mt-0.5 leading-none flex items-baseline gap-1">
-                {p.days}<span className="text-xs font-medium text-muted-foreground">j</span>
+              <div className="text-[9px] uppercase tracking-widest text-white/55 font-semibold">{p.label}</div>
+              <div className="text-2xl font-black mt-0.5 leading-none flex items-baseline gap-1 text-white">
+                {p.days}<span className="text-xs font-medium text-white/50">j</span>
               </div>
-              <div className="text-[9px] text-muted-foreground mt-0.5">{p.tagline}</div>
-              <div className="mt-2 pt-2 border-t border-border/40">
-                <div className="text-base font-black gold-text leading-none">{p.price.toLocaleString()}<span className="text-[10px]"> Ar</span></div>
-                <div className="text-[8px] text-muted-foreground mt-0.5">{Math.round(p.price / p.days).toLocaleString()} Ar/jour</div>
+              <div className="text-[9px] text-white/55 mt-0.5">{p.tagline}</div>
+              <div className="mt-2 pt-2 border-t border-white/10">
+                <div className="text-base font-black luxe-gold-text leading-none">{p.price.toLocaleString()}<span className="text-[10px]"> Ar</span></div>
+                <div className="text-[8px] text-white/50 mt-0.5">{Math.round(p.price / p.days).toLocaleString()} Ar/jour</div>
               </div>
             </button>
           ))}
@@ -134,26 +130,27 @@ const Premium = () => {
           <button
             key={`life-${i}`}
             onClick={() => handleSelect(p)}
-            className="relative w-full text-left rounded-2xl p-4 border-2 border-amber-400/70 bg-gradient-to-br from-amber-500/20 via-amber-500/8 to-amber-500/5 shadow-lg shadow-amber-500/20 active:scale-[0.98] transition backdrop-blur"
+            className="relative w-full text-left luxe-card luxe-card-lg luxe-card-gold p-4 active:scale-[0.98] transition"
           >
-            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[9px] font-black text-white uppercase tracking-wider flex items-center gap-1">
+            <div className="absolute -top-2.5 left-4 luxe-badge-premium flex items-center gap-1">
               <Gem className="w-2.5 h-2.5" /> Offre à vie
             </div>
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{p.label}</div>
-                <div className="text-2xl font-black mt-0.5 flex items-baseline gap-1.5">
-                  À <span className="gold-text">vie</span>
+                <div className="text-[10px] uppercase tracking-widest text-white/55 font-semibold">{p.label}</div>
+                <div className="text-2xl font-black mt-0.5 flex items-baseline gap-1.5 text-white">
+                  À <span className="luxe-gold-text">vie</span>
                 </div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">{p.tagline}</div>
+                <div className="text-[10px] text-white/55 mt-0.5">{p.tagline}</div>
               </div>
               <div className="text-right shrink-0">
-                <div className="text-xl font-black gold-text">{p.price.toLocaleString()}<span className="text-xs"> Ar</span></div>
-                <div className="text-[9px] text-muted-foreground">paiement unique</div>
+                <div className="text-xl font-black luxe-gold-text">{p.price.toLocaleString()}<span className="text-xs"> Ar</span></div>
+                <div className="text-[9px] text-white/50">paiement unique</div>
               </div>
             </div>
           </button>
         ))}
+
 
       </section>
 
@@ -222,34 +219,36 @@ const Premium = () => {
   void access; // status handled inside dashboard component
 
   return (
-    <div className="premium-scope min-h-screen pb-24 relative overflow-hidden text-slate-100">
+    <div className="premium-scope luxe-page min-h-screen pb-24 relative overflow-hidden text-white">
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute -top-40 -left-20 w-96 h-96 rounded-full bg-[hsl(var(--pm-violet)/0.35)] blur-[120px]" />
-      <div className="pointer-events-none absolute top-40 -right-24 w-96 h-96 rounded-full bg-[hsl(var(--pm-blue)/0.30)] blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-[hsl(var(--pm-gold)/0.15)] blur-[120px]" />
+      <div className="pointer-events-none absolute -top-40 -left-20 w-96 h-96 rounded-full bg-[#00D084]/25 blur-[120px]" />
+      <div className="pointer-events-none absolute top-40 -right-24 w-96 h-96 rounded-full bg-[#F4C542]/20 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-[#00D084]/15 blur-[120px]" />
 
       <div className="relative px-4 pt-4 pb-2 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-white/10 pm-ripple text-slate-200">
+        <button onClick={() => navigate(-1)} className="luxe-back" aria-label="Retour">
           <ArrowLeft className="w-4 h-4" />
         </button>
-        <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Menu Premium</span>
-        <div className="w-8" />
+        <span className="text-[10px] uppercase tracking-widest luxe-gold font-bold">Menu Premium</span>
+        <div className="w-10" />
       </div>
 
-      <div className="relative px-5 pt-3 pb-5 text-center space-y-2 pm-anim-slide">
+      <div className="relative px-5 pt-3 pb-5 text-center space-y-3 pm-anim-slide">
         <div className="relative inline-block">
-          <div className="w-20 h-20 rounded-3xl pm-gradient-gold flex items-center justify-center mx-auto shadow-2xl pm-glow-gold pm-anim-float">
-            <Crown className="w-10 h-10 text-slate-900" strokeWidth={2.5} />
+          <div className="w-24 h-24 rounded-[32px] flex items-center justify-center mx-auto luxe-float"
+            style={{ background: "linear-gradient(135deg,#F4C542 0%,#E0A82F 55%,#00D084 130%)",
+                     boxShadow: "0 0 40px rgba(244,197,66,0.55), inset 0 1px 0 rgba(255,255,255,0.35)" }}>
+            <Crown className="w-11 h-11 text-[#06120C]" strokeWidth={2.5} />
           </div>
-          <div className="absolute -top-1 -right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur border border-[hsl(var(--pm-gold)/0.5)] text-[9px] font-black pm-text-gold pm-anim-badge">
-            PRO
-          </div>
+          <div className="absolute -top-1 -right-2 luxe-badge-premium">PRO</div>
         </div>
-        <h1 className="text-2xl font-black tracking-tight text-white">
-          Espace <span className="pm-text-gold">Premium</span>
-        </h1>
+        <div className="space-y-1">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 font-bold">Tableau de bord</p>
+          <h1 className="text-3xl luxe-title tracking-tight">Espace Premium</h1>
+          <p className="text-[11px] text-white/55">Statut, statistiques et accès rapide</p>
+        </div>
         {isAdmin && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[hsl(var(--pm-violet)/0.15)] border border-[hsl(var(--pm-violet)/0.4)] text-[hsl(var(--pm-violet))] text-[11px] font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#00D084]/12 border border-[#00D084]/45 luxe-emerald text-[11px] font-semibold">
             <Shield className="w-3 h-3" /> Compte admin — accès total automatique
           </div>
         )}
