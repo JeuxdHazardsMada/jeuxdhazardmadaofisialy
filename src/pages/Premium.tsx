@@ -155,7 +155,7 @@ const Premium = () => {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Comment souscrire — 6 étapes</h2>
+        <h2 className="text-xs uppercase tracking-widest text-white/55 font-bold">Comment souscrire — 6 étapes</h2>
         <ol className="space-y-2.5">
           {[
             { t: "Présentation Premium", d: "Découvrez tous les avantages inclus." },
@@ -165,13 +165,13 @@ const Premium = () => {
             { t: "Vérification", d: "Contrôle automatique de votre paiement." },
             { t: "Activation", d: "Tous les services Premium débloqués." },
           ].map((s, i) => (
-            <li key={i} className="flex gap-3 p-3 rounded-2xl border border-border/40 bg-card/60 backdrop-blur">
-              <div className="w-7 h-7 shrink-0 rounded-full gold-gradient flex items-center justify-center text-[11px] font-black text-primary-foreground">
+            <li key={i} className="flex gap-3 p-3 luxe-card">
+              <div className="w-7 h-7 shrink-0 luxe-icon-badge text-[11px] font-black">
                 {i + 1}
               </div>
               <div>
-                <div className="text-sm font-bold">{s.t}</div>
-                <div className="text-[11px] text-muted-foreground leading-snug">{s.d}</div>
+                <div className="text-sm font-bold text-white">{s.t}</div>
+                <div className="text-[11px] text-white/55 leading-snug">{s.d}</div>
               </div>
             </li>
           ))}
@@ -179,16 +179,16 @@ const Premium = () => {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Free vs Premium</h2>
-        <div className="rounded-2xl border border-border/60 bg-card/70 backdrop-blur overflow-hidden">
-          <div className="grid grid-cols-[1.6fr_0.7fr_0.7fr] px-3 py-2.5 bg-secondary/50 text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+        <h2 className="text-xs uppercase tracking-widest text-white/55 font-bold">Free vs Premium</h2>
+        <div className="luxe-card overflow-hidden">
+          <div className="grid grid-cols-[1.6fr_0.7fr_0.7fr] px-3 py-2.5 bg-white/5 text-[10px] uppercase tracking-wider font-bold text-white/55">
             <span>Fonctionnalité</span>
             <span className="text-center">Free</span>
-            <span className="text-center gold-text">Premium</span>
+            <span className="text-center luxe-gold-text">Premium</span>
           </div>
           {COMPARE.map((row, i) => (
-            <div key={i} className="grid grid-cols-[1.6fr_0.7fr_0.7fr] px-3 py-2.5 text-[11px] border-t border-border/40 items-center">
-              <span className="text-foreground/90">{row.label}</span>
+            <div key={i} className="grid grid-cols-[1.6fr_0.7fr_0.7fr] px-3 py-2.5 text-[11px] border-t border-white/8 items-center">
+              <span className="text-white/85">{row.label}</span>
               <span className="text-center">{renderCell(row.free, false)}</span>
               <span className="text-center">{renderCell(row.premium, true)}</span>
             </div>
@@ -197,22 +197,22 @@ const Premium = () => {
       </section>
 
       <section>
-        <div className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border border-primary/30 text-center space-y-3 backdrop-blur">
-          <Sparkles className="w-6 h-6 text-primary mx-auto" />
-          <p className="text-sm font-semibold">Prêt à débloquer tous les services Premium ?</p>
-          <p className="text-[11px] text-muted-foreground">Paiement Yas / Airtel Money — activation rapide.</p>
+        <div className="luxe-card luxe-card-gold p-5 text-center space-y-3">
+          <Sparkles className="w-6 h-6 luxe-gold mx-auto luxe-float" />
+          <p className="text-sm font-semibold text-white">Prêt à débloquer tous les services Premium ?</p>
+          <p className="text-[11px] text-white/55">Paiement Yas / Airtel Money — activation rapide.</p>
           <Button
-            variant="premium"
-            className="w-full h-12 font-bold"
+            className="luxe-btn w-full h-12 font-bold"
             onClick={() => handleSelect(PLANS.find((p) => p.popular) || PLANS[0])}
           >
             <Crown className="w-4 h-4 mr-2" /> Souscrire maintenant <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-          <Link to="/games" className="block text-[11px] text-muted-foreground hover:text-foreground">
+          <Link to="/games" className="block text-[11px] text-white/55 hover:text-white">
             Continuer avec le plan gratuit →
           </Link>
         </div>
       </section>
+
     </div>
   );
 
@@ -256,24 +256,25 @@ const Premium = () => {
 
       <div className="relative px-4">
         <Tabs value={tab} onValueChange={setTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-4 h-14 pm-glass p-1 rounded-2xl border-white/10">
-            <TabsTrigger value="dashboard" className="rounded-xl text-[10px] flex-col gap-0.5 pm-ripple text-slate-300 data-[state=active]:bg-[hsl(var(--pm-violet)/0.25)] data-[state=active]:text-white data-[state=active]:shadow-lg">
+          <TabsList className="w-full grid grid-cols-4 h-14 luxe-card p-1 rounded-2xl">
+            <TabsTrigger value="dashboard" className="rounded-xl text-[10px] flex-col gap-0.5 text-white/60 data-[state=active]:bg-[#00D084]/18 data-[state=active]:text-[#00D084] data-[state=active]:shadow-lg">
               <LayoutDashboard className="w-4 h-4" />
               <span>Tableau</span>
             </TabsTrigger>
-            <TabsTrigger value="plans" className="rounded-xl text-[10px] flex-col gap-0.5 pm-ripple text-slate-300 data-[state=active]:bg-[hsl(var(--pm-gold)/0.25)] data-[state=active]:text-[hsl(var(--pm-gold))] data-[state=active]:shadow-lg">
+            <TabsTrigger value="plans" className="rounded-xl text-[10px] flex-col gap-0.5 text-white/60 data-[state=active]:bg-[#F4C542]/18 data-[state=active]:text-[#F4C542] data-[state=active]:shadow-lg">
               <CreditCard className="w-4 h-4" />
               <span>Abonnement</span>
             </TabsTrigger>
-            <TabsTrigger value="history" className="rounded-xl text-[10px] flex-col gap-0.5 pm-ripple text-slate-300 data-[state=active]:bg-[hsl(var(--pm-blue)/0.25)] data-[state=active]:text-[hsl(var(--pm-blue))] data-[state=active]:shadow-lg">
+            <TabsTrigger value="history" className="rounded-xl text-[10px] flex-col gap-0.5 text-white/60 data-[state=active]:bg-[#00D084]/18 data-[state=active]:text-[#00D084] data-[state=active]:shadow-lg">
               <History className="w-4 h-4" />
               <span>Historique</span>
             </TabsTrigger>
-            <TabsTrigger value="help" className="rounded-xl text-[10px] flex-col gap-0.5 pm-ripple text-slate-300 data-[state=active]:bg-[hsl(var(--pm-green)/0.25)] data-[state=active]:text-[hsl(var(--pm-green))] data-[state=active]:shadow-lg">
+            <TabsTrigger value="help" className="rounded-xl text-[10px] flex-col gap-0.5 text-white/60 data-[state=active]:bg-[#F4C542]/18 data-[state=active]:text-[#F4C542] data-[state=active]:shadow-lg">
               <LifeBuoy className="w-4 h-4" />
               <span>Aide</span>
             </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="dashboard" className="mt-5">
             <PremiumDashboard onSubscribe={goSubscribe} onNavigate={setTab} />
